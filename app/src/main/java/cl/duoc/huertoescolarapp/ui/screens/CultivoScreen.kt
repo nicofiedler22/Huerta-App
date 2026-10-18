@@ -61,7 +61,7 @@ fun CultivoScreen(
         OutlinedTextField(
             value = viewModel.fechaSiembra,
             onValueChange = { viewModel.fechaSiembra = it },
-            label = { Text("Fecha Siembra (ej. 01/10/2026)") },
+            label = { Text("Fecha de siembra (ej. 01/10/2026)") },
             modifier = Modifier.fillMaxWidth()
         )
 

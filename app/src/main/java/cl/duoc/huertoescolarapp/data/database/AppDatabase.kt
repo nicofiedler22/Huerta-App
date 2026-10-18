@@ -6,13 +6,16 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import cl.duoc.huertoescolarapp.data.dao.CultivoDao
 import cl.duoc.huertoescolarapp.data.dao.SectorDao
+import cl.duoc.huertoescolarapp.data.dao.TareaDao
 import cl.duoc.huertoescolarapp.data.entity.CultivoEntity
 import cl.duoc.huertoescolarapp.data.entity.SectorEntity
+import cl.duoc.huertoescolarapp.data.entity.TareaEntity
 
-@Database(entities = [SectorEntity::class, CultivoEntity::class], version = 2, exportSchema = false)
+@Database(entities = [SectorEntity::class, CultivoEntity::class, TareaEntity::class], version = 3, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun sectorDao(): SectorDao
     abstract fun cultivoDao(): CultivoDao
+    abstract fun tareaDao(): TareaDao
 
     companion object {
         @Volatile
@@ -25,7 +28,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "huerto_escolar_db"
                 )
-                    .fallbackToDestructiveMigration() // Limpia y recrea si sube la versión de BD
+                    .fallbackToDestructiveMigration()
                     .build()
                 INSTANCE = instance
                 instance

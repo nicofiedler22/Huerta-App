@@ -53,4 +53,5 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.8.7")
 }

@@ -20,13 +20,12 @@ fun HomeScreen(
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
 
+
         Text(
-            text = "Bienvenido al"
-        )
-        Text(
-            text = "🌱 Huerto Escolar",
+            text = "🌱 HuertApp 🌱",
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary
         )
@@ -35,7 +34,7 @@ fun HomeScreen(
 
         Text(
             text = "Selecciona tu perfil para ingresar",
-            fontSize = 16.sp,
+            fontSize = 20.sp,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 

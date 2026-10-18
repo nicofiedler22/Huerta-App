@@ -8,13 +8,23 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import cl.duoc.huertoescolarapp.data.database.AppDatabase
 import cl.duoc.huertoescolarapp.data.entity.SectorEntity
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-
 
 class SectorViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Obtenemos la instancia del DAO de SQLite a través de Room
+    // Instancia del DAO de SQLite a través de Room
     private val sectorDao = AppDatabase.getDatabase(application).sectorDao()
+
+    // 📌 NUEVO: Convertimos el Flow de la base de datos en un StateFlow para que la UI lo observe de forma segura
+    val listaSectores: StateFlow<List<SectorEntity>> = sectorDao.obtenerSectores()
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = emptyList()
+        )
 
     // Campos del formulario
     var nombre by mutableStateOf("")
@@ -39,6 +49,11 @@ class SectorViewModel(application: Application) : AndroidViewModel(application) 
                 )
                 sectorDao.insertarSector(nuevoSector)
                 registroExitoso = true
+
+                // Limpiamos los campos después de guardar con éxito
+                nombre = ""
+                ubicacion = ""
+                descripcion = ""
             }
         } else {
             registroExitoso = false

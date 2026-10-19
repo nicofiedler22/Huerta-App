@@ -7,106 +7,72 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import cl.duoc.huertoescolarapp.ui.components.BotonVolver
+import cl.duoc.huertoescolarapp.ui.components.CampoTexto
+import cl.duoc.huertoescolarapp.ui.components.Encabezado
+import cl.duoc.huertoescolarapp.ui.components.MensajeEstado
+import cl.duoc.huertoescolarapp.ui.components.SelectorOpciones
 import cl.duoc.huertoescolarapp.ui.viewmodel.SectorViewModel
 
+// Formulario para crear o editar un sector
 @Composable
 fun SectorScreen(
     viewModel: SectorViewModel,
     modifier: Modifier = Modifier,
     onBack: () -> Unit
 ) {
-    val scrollState = rememberScrollState()
-
     Column(
         modifier = modifier
             .fillMaxSize()
-            .verticalScroll(scrollState)
+            .verticalScroll(rememberScrollState())
             .padding(16.dp),
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        Text(
-            text = "🌱 Registrar Nuevo Sector",
-            fontSize = 22.sp,
-            color = MaterialTheme.colorScheme.primary
-        )
+        Encabezado(if (viewModel.idEdicion == null) "🌱 Registrar Nuevo Sector" else "✏️ Editar Sector")
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        OutlinedTextField(
+        CampoTexto(
             value = viewModel.nombre,
             onValueChange = { viewModel.nombre = it },
-            label = { Text("Nombre del Sector") },
-            isError = viewModel.errorNombre,
-            modifier = Modifier.fillMaxWidth()
+            label = "Nombre del Sector",
+            error = viewModel.errorNombre
         )
 
-        Spacer(modifier = Modifier.height(8.dp))
-
-        OutlinedTextField(
+        CampoTexto(
             value = viewModel.ubicacion,
             onValueChange = { viewModel.ubicacion = it },
-            label = { Text("Ubicación") },
-            isError = viewModel.errorUbicacion,
-            modifier = Modifier.fillMaxWidth()
+            label = "Ubicación",
+            error = viewModel.errorUbicacion
+        )
+
+        CampoTexto(
+            value = viewModel.descripcion,
+            onValueChange = { viewModel.descripcion = it },
+            label = "Descripción (Opcional)",
+            error = viewModel.errorDescripcion,
+            singleLine = false
+        )
+
+        Text(text = "Estado del sector:", style = MaterialTheme.typography.bodyMedium)
+        SelectorOpciones(
+            opciones = listOf("Activo" to "Activo", "En descanso" to "En descanso"),
+            seleccionado = viewModel.estado,
+            onSeleccion = { viewModel.estado = it }
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        OutlinedTextField(
-            value = viewModel.descripcion,
-            onValueChange = { viewModel.descripcion = it },
-            label = { Text("Descripción (Opcional)") },
-            modifier = Modifier.fillMaxWidth()
-        )
+        Button(onClick = { viewModel.validarYGuardar() }, modifier = Modifier.fillMaxWidth()) {
+            Text(text = if (viewModel.idEdicion == null) "Guardar Sector" else "Guardar Cambios")
+        }
 
-        Spacer(modifier = Modifier.height(12.dp))
+        MensajeEstado(viewModel.mensaje, viewModel.mensajeExito)
 
-        // Estado del sector (se elige con botones, igual que el sector en otras pantallas)
-        Text(text = "Estado del sector:", fontSize = 14.sp)
-        Spacer(modifier = Modifier.height(4.dp))
-
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            listOf("Activo", "En descanso").forEach { opcion ->
-                Button(
-                    onClick = { viewModel.estado = opcion },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (viewModel.estado == opcion)
-                            MaterialTheme.colorScheme.primary
-                        else MaterialTheme.colorScheme.secondary
-                    ),
-                    modifier = Modifier.weight(1f)
-                ) {
-                    Text(text = opcion)
-                }
+        if (viewModel.idEdicion != null) {
+            OutlinedButton(onClick = { viewModel.nuevoSector() }, modifier = Modifier.fillMaxWidth()) {
+                Text(text = "Cancelar edición")
             }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = { viewModel.validarYGuardar() },
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Text(text = "Guardar Sector")
-        }
-
-        if (viewModel.registroExitoso) {
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(text = "¡Sector guardado con éxito!", color = MaterialTheme.colorScheme.primary)
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        Button(
-            onClick = onBack,
-            modifier = Modifier.fillMaxWidth(),
-            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.outline)
-        ) {
-            Text(text = "Volver")
-        }
+        BotonVolver(onClick = onBack)
     }
 }

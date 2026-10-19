@@ -1,6 +1,5 @@
 package cl.duoc.huertoescolarapp.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -10,34 +9,47 @@ import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+    primary = VerdePrimarioOscuro,
+    onPrimary = Color(0xFF00390A),
+    primaryContainer = VerdeContenedorOscuro,
+    secondary = VerdeSecundarioOscuro,
+    onSecondary = Color(0xFF1F3318),
+    tertiary = TierraTerciarioOscuro,
+    background = FondoOscuro,
+    surface = FondoOscuro,
+    onBackground = TextoOscuro,
+    onSurface = TextoOscuro,
+    surfaceVariant = SuperficieVariantOscuro,
+    onSurfaceVariant = TextoVariantOscuro,
+    outline = BordeOscuro,
+    error = Color(0xFFFFB4AB)
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
+    primary = VerdePrimario,
     onPrimary = Color.White,
+    primaryContainer = VerdeContenedor,
+    secondary = VerdeSecundario,
     onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+    tertiary = TierraTerciario,
+    background = FondoClaro,
+    surface = FondoClaro,
+    onBackground = TextoClaro,
+    onSurface = TextoClaro,
+    surfaceVariant = SuperficieVariantClaro,
+    onSurfaceVariant = TextoVariantClaro,
+    outline = BordeClaro,
+    error = Color(0xFFBA1A1A)
 )
 
 @Composable
 fun HuertoEscolarAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    // Se desactiva el color dinámico para que siempre se vea la paleta verde del huerto
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

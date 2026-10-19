@@ -38,6 +38,10 @@ class HuertoRepository(db: AppDatabase) {
         return usuarioDao.iniciarSesion(correo, clave)
     }
 
+    suspend fun obtenerUsuario(id: Long): UsuarioEntity? {
+        return usuarioDao.obtenerPorId(id)
+    }
+
     // ---------- Sectores ----------
     suspend fun guardarSector(sector: SectorEntity) {
         sectorDao.insertarSector(sector)
@@ -177,6 +181,9 @@ class HuertoRepository(db: AppDatabase) {
         // Un reporte de problema de ejemplo
         reporteDao.insertarReporte(
             ReporteProblemaEntity(sectorId = idInvernadero, cultivoId = idTomate, reportanteId = idEst1, descripcion = "Hay hojas amarillas en dos plantas.", fecha = fechaHoy(-2), estadoAtencion = "Pendiente")
+        )
+        reporteDao.insertarReporte(
+            ReporteProblemaEntity(sectorId = idNorte, cultivoId = null, reportanteId = idEst2, descripcion = "Se ven caracoles comiendo las hojas de la lechuga.", fecha = fechaHoy(-1), estadoAtencion = "En revisión")
         )
     }
 }

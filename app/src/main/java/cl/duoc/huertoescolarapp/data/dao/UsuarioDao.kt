@@ -22,6 +22,9 @@ interface UsuarioDao {
     @Query("SELECT * FROM usuarios WHERE rol = :rol")
     fun obtenerUsuariosPorRol(rol: String): Flow<List<UsuarioEntity>>
 
+    @Query("SELECT * FROM usuarios WHERE id = :id LIMIT 1")
+    suspend fun obtenerPorId(id: Long): UsuarioEntity?
+
     @Query("SELECT COUNT(*) FROM usuarios")
     suspend fun contarUsuarios(): Int
 }

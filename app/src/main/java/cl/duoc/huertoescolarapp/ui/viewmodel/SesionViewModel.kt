@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import cl.duoc.huertoescolarapp.data.database.AppDatabase
 import cl.duoc.huertoescolarapp.data.entity.UsuarioEntity
 import cl.duoc.huertoescolarapp.data.repository.HuertoRepository
+import cl.duoc.huertoescolarapp.util.Validadores
 import kotlinx.coroutines.launch
 
 class SesionViewModel(application: Application) : AndroidViewModel(application) {
@@ -22,9 +23,9 @@ class SesionViewModel(application: Application) : AndroidViewModel(application) 
     var correo by mutableStateOf("")
     var clave by mutableStateOf("")
 
-    // Estados de error
-    var errorCorreo by mutableStateOf(false)
-    var errorClave by mutableStateOf(false)
+    // Mensajes de error que se muestran debajo de cada campo
+    var errorCorreo by mutableStateOf<String?>(null)
+    var errorClave by mutableStateOf<String?>(null)
     var mensajeError by mutableStateOf("")
 
     init {
@@ -35,29 +36,30 @@ class SesionViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun iniciarSesion() {
-        errorCorreo = correo.isBlank()
-        errorClave = clave.isBlank()
+        errorCorreo = Validadores.correo(correo)
+        errorClave = Validadores.obligatorio(clave, "La contraseña")
+        mensajeError = ""
+        if (errorCorreo != null || errorClave != null) return
 
-        if (errorCorreo || errorClave) {
-            mensajeError = "Completa el correo y la contraseña."
-        } else {
-            viewModelScope.launch {
-                val usuario = repository.iniciarSesion(correo.trim(), clave)
-                if (usuario == null) {
-                    mensajeError = "Correo o contraseña incorrectos."
-                } else {
-                    mensajeError = ""
-                    clave = ""
-                    usuarioActual = usuario
-                }
+        viewModelScope.launch {
+            val usuario = repository.iniciarSesion(correo.trim(), clave)
+            if (usuario == null) {
+                mensajeError = "Correo o contraseña incorrectos."
+            } else {
+                clave = ""
+                SesionActual.usuario = usuario
+                usuarioActual = usuario
             }
         }
     }
 
     fun cerrarSesion() {
+        SesionActual.usuario = null
         usuarioActual = null
         correo = ""
         clave = ""
         mensajeError = ""
+        errorCorreo = null
+        errorClave = null
     }
 }

@@ -5,64 +5,78 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.unit.sp
 import cl.duoc.huertoescolarapp.ui.viewmodel.SectorViewModel
 
 @Composable
 fun SectorScreen(
+    viewModel: SectorViewModel,
     modifier: Modifier = Modifier,
-    viewModel: SectorViewModel = viewModel(),
     onBack: () -> Unit
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
             .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.Center
     ) {
         Text(
-            text = "Registrar Nuevo Sector",
-            style = MaterialTheme.typography.headlineMedium
+            text = "🌱 Registrar Nuevo Sector",
+            fontSize = 22.sp,
+            color = MaterialTheme.colorScheme.primary
         )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         OutlinedTextField(
             value = viewModel.nombre,
             onValueChange = { viewModel.nombre = it },
-            label = { Text("Nombre del Sector (Ej: Zona Norte)") },
+            label = { Text("Nombre del Sector") },
             isError = viewModel.errorNombre,
-            supportingText = {
-                if (viewModel.errorNombre) {
-                    Text("El nombre es obligatorio")
-                }
-            },
             modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
 
         OutlinedTextField(
             value = viewModel.ubicacion,
             onValueChange = { viewModel.ubicacion = it },
-            label = { Text("Ubicación del sector") },
+            label = { Text("Ubicación") },
             isError = viewModel.errorUbicacion,
-            supportingText = {
-                if (viewModel.errorUbicacion) {
-                    Text("La ubicación es obligatoria")
-                }
-            },
             modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        OutlinedTextField(
+            value = viewModel.descripcion,
+            onValueChange = { viewModel.descripcion = it },
+            label = { Text("Descripción (Opcional)") },
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
 
         Button(
             onClick = { viewModel.validarYGuardar() },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Text("Guardar Sector")
+            Text(text = "Guardar Sector")
         }
 
         if (viewModel.registroExitoso) {
-            Text(
-                text = "¡Sector validado y guardado con éxito!",
-                color = MaterialTheme.colorScheme.primary
-            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = "¡Sector guardado con éxito!", color = MaterialTheme.colorScheme.primary)
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Button(
+            onClick = onBack,
+            modifier = Modifier.fillMaxWidth(),
+            colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.outline)
+        ) {
+            Text(text = "Volver")
         }
     }
 }

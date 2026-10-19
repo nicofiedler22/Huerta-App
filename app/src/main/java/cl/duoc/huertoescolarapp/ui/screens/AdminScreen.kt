@@ -19,6 +19,7 @@ fun AdminScreen(
     onNavigateToCultivos: () -> Unit,
     onNavigateToTareas: () -> Unit,
     onNavigateToRevision: () -> Unit,
+    onNavigateToReportes: () -> Unit,
     onBackToHome: () -> Unit
 ) {
     val scrollState = rememberScrollState()
@@ -84,6 +85,15 @@ fun AdminScreen(
             modifier = Modifier.fillMaxWidth().height(48.dp)
         ) {
             Text(text = "Revisar Tareas de Estudiantes", fontSize = 15.sp)
+        }
+
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Button(
+            onClick = onNavigateToReportes,
+            modifier = Modifier.fillMaxWidth().height(48.dp)
+        ) {
+            Text(text = "Revisar Reportes de Problemas", fontSize = 15.sp)
         }
 
         Spacer(modifier = Modifier.height(24.dp))

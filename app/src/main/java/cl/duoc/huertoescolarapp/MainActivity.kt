@@ -15,6 +15,7 @@ import cl.duoc.huertoescolarapp.ui.viewmodel.CultivoViewModel
 import cl.duoc.huertoescolarapp.ui.viewmodel.SectorViewModel
 import cl.duoc.huertoescolarapp.ui.viewmodel.SesionViewModel
 import cl.duoc.huertoescolarapp.ui.viewmodel.TareaViewModel
+import cl.duoc.huertoescolarapp.ui.viewmodel.ReporteViewModel
 
 class MainActivity : ComponentActivity() {
 
@@ -23,6 +24,7 @@ class MainActivity : ComponentActivity() {
     private val sectorViewModel: SectorViewModel by viewModels()
     private val cultivoViewModel: CultivoViewModel by viewModels()
     private val tareaViewModel: TareaViewModel by viewModels()
+    private val reporteViewModel: ReporteViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,6 +54,7 @@ class MainActivity : ComponentActivity() {
                                     onNavigateToCultivos = { currentScreen = "cultivo_form" },
                                     onNavigateToTareas = { currentScreen = "tarea_form" },
                                     onNavigateToRevision = { currentScreen = "admin_revision" },
+                                    onNavigateToReportes = { currentScreen = "admin_reportes" },
                                     onBackToHome = {
                                         sesionViewModel.cerrarSesion()
                                         currentScreen = "dashboard"
@@ -76,6 +79,10 @@ class MainActivity : ComponentActivity() {
                                 "admin_revision" -> AdminRevisionScreen(
                                     viewModel = tareaViewModel,
                                     adminId = usuario.id,
+                                    onBack = { currentScreen = "dashboard" }
+                                )
+                                "admin_reportes" -> AdminReportesScreen(
+                                    viewModel = reporteViewModel,
                                     onBack = { currentScreen = "dashboard" }
                                 )
                             }

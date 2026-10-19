@@ -1,6 +1,8 @@
 package cl.duoc.huertoescolarapp.ui.screens
 
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -14,9 +16,12 @@ fun SectorScreen(
     modifier: Modifier = Modifier,
     onBack: () -> Unit
 ) {
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = modifier
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp),
         verticalArrangement = Arrangement.Center
     ) {
@@ -54,6 +59,31 @@ fun SectorScreen(
             label = { Text("Descripción (Opcional)") },
             modifier = Modifier.fillMaxWidth()
         )
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        // Estado del sector (se elige con botones, igual que el sector en otras pantallas)
+        Text(text = "Estado del sector:", fontSize = 14.sp)
+        Spacer(modifier = Modifier.height(4.dp))
+
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            listOf("Activo", "En descanso").forEach { opcion ->
+                Button(
+                    onClick = { viewModel.estado = opcion },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = if (viewModel.estado == opcion)
+                            MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.secondary
+                    ),
+                    modifier = Modifier.weight(1f)
+                ) {
+                    Text(text = opcion)
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(16.dp))
 

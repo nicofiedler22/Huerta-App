@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import cl.duoc.huertoescolarapp.data.database.AppDatabase
 import cl.duoc.huertoescolarapp.data.entity.SectorEntity
+import cl.duoc.huertoescolarapp.data.repository.HuertoRepository
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
@@ -15,11 +16,11 @@ import kotlinx.coroutines.launch
 
 class SectorViewModel(application: Application) : AndroidViewModel(application) {
 
-    // Instancia del DAO de SQLite a través de Room
-    private val sectorDao = AppDatabase.getDatabase(application).sectorDao()
+    // Ahora el ViewModel habla con el Repository, no directo con el DAO
+    private val repository = HuertoRepository(AppDatabase.getDatabase(application))
 
-    // 📌 NUEVO: Convertimos el Flow de la base de datos en un StateFlow para que la UI lo observe de forma segura
-    val listaSectores: StateFlow<List<SectorEntity>> = sectorDao.obtenerSectores()
+    // Convertimos el Flow de la base de datos en un StateFlow para que la UI lo observe de forma segura
+    val listaSectores: StateFlow<List<SectorEntity>> = repository.sectores
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5000),
@@ -30,6 +31,7 @@ class SectorViewModel(application: Application) : AndroidViewModel(application) 
     var nombre by mutableStateOf("")
     var descripcion by mutableStateOf("")
     var ubicacion by mutableStateOf("")
+    var estado by mutableStateOf("Activo")
 
     // Estados de error para validaciones
     var errorNombre by mutableStateOf(false)
@@ -45,15 +47,17 @@ class SectorViewModel(application: Application) : AndroidViewModel(application) 
                 val nuevoSector = SectorEntity(
                     nombre = nombre,
                     ubicacion = ubicacion,
-                    descripcion = descripcion
+                    descripcion = descripcion,
+                    estado = estado
                 )
-                sectorDao.insertarSector(nuevoSector)
+                repository.guardarSector(nuevoSector)
                 registroExitoso = true
 
                 // Limpiamos los campos después de guardar con éxito
                 nombre = ""
                 ubicacion = ""
                 descripcion = ""
+                estado = "Activo"
             }
         } else {
             registroExitoso = false

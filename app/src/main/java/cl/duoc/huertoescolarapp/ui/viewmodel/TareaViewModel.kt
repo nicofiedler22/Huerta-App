@@ -8,21 +8,23 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import cl.duoc.huertoescolarapp.data.database.AppDatabase
 import cl.duoc.huertoescolarapp.data.entity.TareaEntity
+import cl.duoc.huertoescolarapp.data.entity.ValidacionEntity
+import cl.duoc.huertoescolarapp.data.repository.HuertoRepository
+import cl.duoc.huertoescolarapp.util.fechaHoy
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class TareaViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val tareaDao = AppDatabase.getDatabase(application).tareaDao()
-    val sectorDao = AppDatabase.getDatabase(application).sectorDao()
+    private val repository = HuertoRepository(AppDatabase.getDatabase(application))
 
     // Campos del formulario de creación (Admin)
     var titulo by mutableStateOf("")
     var descripcion by mutableStateOf("")
     var tipo by mutableStateOf("Riego")
     var fechaProgramada by mutableStateOf("")
-    var responsable by mutableStateOf("")
+    var responsableIdSeleccionado by mutableStateOf<Long?>(null)
     var sectorIdSeleccionado by mutableStateOf<Long?>(null)
 
     // Estados de error y éxito para creación
@@ -31,34 +33,45 @@ class TareaViewModel(application: Application) : AndroidViewModel(application) {
     var registroExitoso by mutableStateOf(false)
 
     // Listas reactivas
-    val listaSectores = sectorDao.obtenerSectores()
+    val listaSectores = repository.sectores
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
-    val listaTareas = tareaDao.obtenerTodasLasTareas()
+    // Solo los estudiantes (para poder asignarles tareas)
+    val listaColaboradores = repository.colaboradores
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    // Todos los usuarios (para mostrar el nombre del responsable en las tarjetas)
+    val listaUsuarios = repository.usuarios
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val listaTareas = repository.tareas
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
+
+    val listaValidaciones = repository.validaciones
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), emptyList())
 
     // 📌 Crear nueva tarea (Admin)
     fun validarYGuardar() {
         errorTitulo = titulo.isBlank()
-        errorResponsable = responsable.isBlank()
+        errorResponsable = responsableIdSeleccionado == null
 
         if (!errorTitulo && !errorResponsable && sectorIdSeleccionado != null && fechaProgramada.isNotBlank()) {
             viewModelScope.launch {
                 val nuevaTarea = TareaEntity(
                     sectorId = sectorIdSeleccionado!!,
+                    responsableId = responsableIdSeleccionado!!,
                     titulo = titulo,
                     descripcion = descripcion,
                     tipo = tipo,
                     fechaProgramada = fechaProgramada,
-                    responsable = responsable,
                     estado = "Pendiente"
                 )
-                tareaDao.insertarTarea(nuevaTarea)
+                repository.guardarTarea(nuevaTarea)
                 registroExitoso = true
                 titulo = ""
                 descripcion = ""
                 fechaProgramada = ""
-                responsable = ""
+                responsableIdSeleccionado = null
             }
         } else {
             registroExitoso = false
@@ -72,19 +85,25 @@ class TareaViewModel(application: Application) : AndroidViewModel(application) {
                 estado = nuevoEstado,
                 comentariosEstudiante = comentarios
             )
-            tareaDao.actualizarTarea(tareaActualizada)
+            repository.actualizarTarea(tareaActualizada)
         }
     }
 
     // 📌 Flujo del Administrador: Validar (Aprobar) o Rechazar tarea (Exige motivo)
-    fun revisarTareaAdmin(tarea: TareaEntity, aprobado: Boolean, motivo: String) {
+    // Además de cambiar el estado, guarda quién validó, cuándo y el resultado
+    fun revisarTareaAdmin(tarea: TareaEntity, aprobado: Boolean, motivo: String, validadorId: Long) {
         viewModelScope.launch {
             val estadoFinal = if (aprobado) "Validada" else "Rechazada"
-            val tareaActualizada = tarea.copy(
-                estado = estadoFinal,
-                motivoRechazo = if (!aprobado) motivo else ""
+            repository.actualizarTarea(tarea.copy(estado = estadoFinal))
+            repository.guardarValidacion(
+                ValidacionEntity(
+                    tareaId = tarea.id,
+                    validadorId = validadorId,
+                    resultado = estadoFinal,
+                    motivo = if (!aprobado) motivo else "",
+                    fecha = fechaHoy()
+                )
             )
-            tareaDao.actualizarTarea(tareaActualizada)
         }
     }
 }

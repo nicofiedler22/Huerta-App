@@ -9,5 +9,6 @@ data class SectorEntity(
     val id: Long = 0L,
     val nombre: String,
     val ubicacion: String,
-    val descripcion: String
+    val descripcion: String,
+    val estado: String = "Activo" // Activo, En descanso
 )

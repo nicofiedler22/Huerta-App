@@ -85,6 +85,7 @@ fun SectorItemCard(sector: SectorEntity) {
             Text(text = sector.nombre, fontSize = 18.sp, color = MaterialTheme.colorScheme.primary)
             Spacer(modifier = Modifier.height(4.dp))
             Text(text = "Ubicación: ${sector.ubicacion}", fontSize = 14.sp)
+            Text(text = "Estado: ${sector.estado}", fontSize = 14.sp)
             if (sector.descripcion.isNotBlank()) {
                 Spacer(modifier = Modifier.height(2.dp))
                 Text(text = "Descripción: ${sector.descripcion}", fontSize = 12.sp, color = MaterialTheme.colorScheme.secondary)

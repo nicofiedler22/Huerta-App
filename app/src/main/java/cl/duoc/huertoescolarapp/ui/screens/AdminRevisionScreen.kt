@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -13,11 +14,12 @@ import cl.duoc.huertoescolarapp.ui.viewmodel.TareaViewModel
 @Composable
 fun AdminRevisionScreen(
     viewModel: TareaViewModel,
+    adminId: Long,
     modifier: Modifier = Modifier,
     onBack: () -> Unit
 ) {
     val tareas by viewModel.listaTareas.collectAsState()
-    // Filtramos solo las tareas que están pendientes de revisión por parte del docente
+    val usuarios by viewModel.listaUsuarios.collectAsState()
     val tareasPendientesValidacion = tareas.filter { it.estado == "Pendiente de validación" }
 
     Column(
@@ -38,7 +40,7 @@ fun AdminRevisionScreen(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxWidth(),
-                contentAlignment = androidx.compose.ui.Alignment.Center
+                contentAlignment = Alignment.Center
             ) {
                 Text(text = "No hay tareas pendientes de validación.", color = MaterialTheme.colorScheme.outline)
             }
@@ -49,15 +51,17 @@ fun AdminRevisionScreen(
                     .fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(tareasPendientesValidacion) { tarea ->
+                items(tareasPendientesValidacion, key = { it.id }) { tarea ->
                     var motivoRechazoInput by remember { mutableStateOf("") }
                     var mostrarInputRechazo by remember { mutableStateOf(false) }
+                    val nombreResponsable = usuarios.find { it.id == tarea.responsableId }?.nombre ?: "Sin asignar"
 
                     Card(modifier = Modifier.fillMaxWidth()) {
                         Column(modifier = Modifier.padding(12.dp)) {
                             Text(text = tarea.titulo, fontSize = 16.sp, color = MaterialTheme.colorScheme.primary)
-                            Text(text = "Responsable: ${tarea.responsable}", fontSize = 12.sp)
+                            Text(text = "Responsable: $nombreResponsable", fontSize = 12.sp)
                             Text(text = "Descripción: ${tarea.descripcion}", fontSize = 12.sp)
+                            Text(text = "Fecha programada: ${tarea.fechaProgramada}", fontSize = 12.sp)
 
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
@@ -78,7 +82,7 @@ fun AdminRevisionScreen(
                                 Button(
                                     onClick = {
                                         if (motivoRechazoInput.isNotBlank()) {
-                                            viewModel.revisarTareaAdmin(tarea, aprobado = false, motivo = motivoRechazoInput)
+                                            viewModel.revisarTareaAdmin(tarea, aprobado = false, motivo = motivoRechazoInput, validadorId = adminId)
                                             mostrarInputRechazo = false
                                         }
                                     },
@@ -94,7 +98,7 @@ fun AdminRevisionScreen(
                                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                                 ) {
                                     Button(
-                                        onClick = { viewModel.revisarTareaAdmin(tarea, aprobado = true, motivo = "") },
+                                        onClick = { viewModel.revisarTareaAdmin(tarea, aprobado = true, motivo = "", validadorId = adminId) },
                                         modifier = Modifier.weight(1f)
                                     ) {
                                         Text("Aprobar")

@@ -3,8 +3,7 @@
 Aplicación Android para gestionar un huerto escolar: el docente administra sectores, cultivos y tareas, y los estudiantes ejecutan sus tareas entregando comentarios y fotografías como evidencia.
 
 ## Integrantes
-- [Nombre integrante 1]
-- [Nombre integrante 2]
+- Nicolás Fiedler Silva
 
 ## Funcionalidades
 **Administrador (docente/tallerista)**

@@ -18,7 +18,6 @@ import cl.duoc.huertoescolarapp.ui.components.TextoError
 import cl.duoc.huertoescolarapp.ui.components.VistaPrevia
 import cl.duoc.huertoescolarapp.ui.viewmodel.ReporteViewModel
 
-// Formulario para reportar un problema del huerto (con foto opcional)
 @Composable
 fun ReporteFormScreen(
     viewModel: ReporteViewModel,

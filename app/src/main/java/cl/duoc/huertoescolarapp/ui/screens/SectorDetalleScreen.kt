@@ -21,7 +21,6 @@ import cl.duoc.huertoescolarapp.ui.theme.colorEstadoSector
 import cl.duoc.huertoescolarapp.ui.viewmodel.CultivoViewModel
 import cl.duoc.huertoescolarapp.ui.viewmodel.SectorViewModel
 
-// Detalle de un sector con todos sus cultivos
 @Composable
 fun SectorDetalleScreen(
     sectorId: Long,

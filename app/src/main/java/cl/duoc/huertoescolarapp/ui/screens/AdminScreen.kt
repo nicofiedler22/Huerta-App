@@ -37,7 +37,6 @@ fun AdminScreen(
     val tareas by tareaViewModel.listaTareas.collectAsState()
     val reportes by reporteViewModel.listaReportes.collectAsState()
 
-    // Avisos del panel
     val porValidar = tareaViewModel.contarPorValidar(tareas)
     val atrasadas = tareaViewModel.contarAtrasadas(tareas)
     val reportesSinResolver = reportes.count { it.estadoAtencion != "Resuelto" }
@@ -62,7 +61,6 @@ fun AdminScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Avisos: pendientes de validación, atrasadas y reportes abiertos
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(text = "Avisos", style = MaterialTheme.typography.titleMedium)

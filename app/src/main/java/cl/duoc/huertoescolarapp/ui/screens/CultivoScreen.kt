@@ -18,7 +18,6 @@ import cl.duoc.huertoescolarapp.ui.components.TextoError
 import cl.duoc.huertoescolarapp.ui.components.rememberSelectorFecha
 import cl.duoc.huertoescolarapp.ui.viewmodel.CultivoViewModel
 
-// Formulario para crear o editar un cultivo
 @Composable
 fun CultivoScreen(
     viewModel: CultivoViewModel,
@@ -27,7 +26,6 @@ fun CultivoScreen(
 ) {
     val sectores by viewModel.listaSectores.collectAsState()
 
-    // Selectores de fecha nativos de Android
     val abrirFechaSiembra = rememberSelectorFecha { viewModel.fechaSiembra = it }
     val abrirFechaCosecha = rememberSelectorFecha { viewModel.fechaCosecha = it }
 

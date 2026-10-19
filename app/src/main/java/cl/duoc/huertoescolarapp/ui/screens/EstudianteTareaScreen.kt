@@ -16,7 +16,6 @@ import cl.duoc.huertoescolarapp.ui.theme.ColorInfo
 import cl.duoc.huertoescolarapp.ui.theme.ColorTareaPorValidar
 import cl.duoc.huertoescolarapp.ui.viewmodel.TareaViewModel
 
-// Dashboard del estudiante: avisos de sus tareas y acceso a sus funciones
 @Composable
 fun EstudianteTareaScreen(
     viewModel: TareaViewModel,
@@ -53,7 +52,6 @@ fun EstudianteTareaScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Avisos de tareas pendientes o atrasadas
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
                 Text(text = "Avisos", style = MaterialTheme.typography.titleMedium)

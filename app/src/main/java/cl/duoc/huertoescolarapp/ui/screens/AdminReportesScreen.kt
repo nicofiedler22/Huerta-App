@@ -17,7 +17,6 @@ import cl.duoc.huertoescolarapp.ui.components.VistaPrevia
 import cl.duoc.huertoescolarapp.ui.theme.colorEstadoReporte
 import cl.duoc.huertoescolarapp.ui.viewmodel.ReporteViewModel
 
-// Consulta de reportes: el administrador ve todos y cambia su estado; el estudiante ve los suyos
 @Composable
 fun AdminReportesScreen(
     viewModel: ReporteViewModel,

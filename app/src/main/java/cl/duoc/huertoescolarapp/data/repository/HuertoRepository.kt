@@ -11,8 +11,6 @@ import cl.duoc.huertoescolarapp.data.entity.ValidacionEntity
 import cl.duoc.huertoescolarapp.util.fechaHoy
 import kotlinx.coroutines.flow.Flow
 
-// Repository: es el intermediario entre los ViewModels y los DAO (la fuente de datos).
-// Los ViewModels ya no hablan directo con la base de datos.
 class HuertoRepository(db: AppDatabase) {
 
     private val usuarioDao = db.usuarioDao()
@@ -106,23 +104,21 @@ class HuertoRepository(db: AppDatabase) {
         reporteDao.actualizarReporte(reporte)
     }
 
-    // ---------- Datos ficticios para demostrar todos los flujos ----------
-    // Solo se cargan la primera vez (cuando todavía no hay usuarios)
     suspend fun sembrarDatosDemo() {
         if (usuarioDao.contarUsuarios() > 0) return
 
         // 1 administrador y 3 estudiantes
         val idAdmin = usuarioDao.insertarUsuario(
-            UsuarioEntity(nombre = "Profesora Carolina Soto", correo = "docente@huerto.cl", clave = "admin123", rol = "Administrador")
+            UsuarioEntity(nombre = "Profesor Nicolás Fiedler", correo = "docente@huerto.cl", clave = "admin123", rol = "Administrador")
         )
         val idEst1 = usuarioDao.insertarUsuario(
-            UsuarioEntity(nombre = "Estudiante 1", correo = "estudiante1@huerto.cl", clave = "1234", rol = "Colaborador")
+            UsuarioEntity(nombre = "Martina Cerón", correo = "estudiante1@huerto.cl", clave = "1234", rol = "Colaborador")
         )
         val idEst2 = usuarioDao.insertarUsuario(
-            UsuarioEntity(nombre = "Estudiante 2", correo = "estudiante2@huerto.cl", clave = "1234", rol = "Colaborador")
+            UsuarioEntity(nombre = "Manuel Silva", correo = "estudiante2@huerto.cl", clave = "1234", rol = "Colaborador")
         )
         val idEst3 = usuarioDao.insertarUsuario(
-            UsuarioEntity(nombre = "Estudiante 3", correo = "estudiante3@huerto.cl", clave = "1234", rol = "Colaborador")
+            UsuarioEntity(nombre = "Valeska Silva", correo = "estudiante3@huerto.cl", clave = "1234", rol = "Colaborador")
         )
 
         // Sectores

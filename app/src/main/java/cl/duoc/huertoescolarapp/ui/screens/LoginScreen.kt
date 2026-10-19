@@ -30,7 +30,7 @@ fun LoginScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "🌱 HuertApp 🌱",
+            text = "🌱 Huertapp 🌱",
             style = MaterialTheme.typography.headlineMedium,
             color = MaterialTheme.colorScheme.primary
         )
@@ -79,7 +79,6 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Cuentas ficticias para probar la app
         Card(modifier = Modifier.fillMaxWidth()) {
             Column(modifier = Modifier.padding(12.dp)) {
                 Text(text = "Cuentas de prueba", style = MaterialTheme.typography.titleMedium, color = MaterialTheme.colorScheme.primary)

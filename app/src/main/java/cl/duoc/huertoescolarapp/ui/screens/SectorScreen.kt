@@ -14,7 +14,6 @@ import cl.duoc.huertoescolarapp.ui.components.MensajeEstado
 import cl.duoc.huertoescolarapp.ui.components.SelectorOpciones
 import cl.duoc.huertoescolarapp.ui.viewmodel.SectorViewModel
 
-// Formulario para crear o editar un sector
 @Composable
 fun SectorScreen(
     viewModel: SectorViewModel,

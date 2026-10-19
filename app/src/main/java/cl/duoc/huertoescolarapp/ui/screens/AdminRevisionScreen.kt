@@ -21,7 +21,6 @@ import cl.duoc.huertoescolarapp.ui.theme.ColorError
 import cl.duoc.huertoescolarapp.ui.theme.colorEstadoTarea
 import cl.duoc.huertoescolarapp.ui.viewmodel.TareaViewModel
 
-// Pantalla de revisión: el administrador aprueba o rechaza las tareas entregadas
 @Composable
 fun AdminRevisionScreen(
     viewModel: TareaViewModel,
